@@ -1,0 +1,272 @@
+{% extends "base.html" %} {% block title %}Dashboard - Speak{% endblock %} {%
+block content %}
+<div class="space-y-8">
+  <!-- Header -->
+  <div class="bg-white rounded-lg shadow-lg p-6">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+    <p class="text-gray-600">
+      Chào mừng bạn trở lại, {{ current_user.username }}!
+    </p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+            />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Audio Files</p>
+          <p class="text-2xl font-semibold text-gray-900">
+            {{ recent_audio|length }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2"
+            />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Projects</p>
+          <p class="text-2xl font-semibold text-gray-900">
+            {{ projects|length }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-green-100 text-green-600">
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+            />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Voices</p>
+          <p class="text-2xl font-semibold text-gray-900">0</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-orange-100 text-orange-600">
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Usage</p>
+          <p class="text-2xl font-semibold text-gray-900">0%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+      <div class="space-y-3">
+        <a
+          href="{{ url_for('tts.index') }}"
+          class="flex items-center p-3 rounded-lg bg-blue-50 hover:bg-blue-100 transition duration-200"
+        >
+          <svg
+            class="w-5 h-5 text-blue-600 mr-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+            />
+          </svg>
+          <span class="text-gray-900 font-medium">Tạo Text-to-Speech</span>
+        </a>
+        <a
+          href="{{ url_for('voice_cloning.index') }}"
+          class="flex items-center p-3 rounded-lg bg-purple-50 hover:bg-purple-100 transition duration-200"
+        >
+          <svg
+            class="w-5 h-5 text-purple-600 mr-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2"
+            />
+          </svg>
+          <span class="text-gray-900 font-medium">Clone Voice</span>
+        </a>
+        <a
+          href="{{ url_for('voice_changer.index') }}"
+          class="flex items-center p-3 rounded-lg bg-green-50 hover:bg-green-100 transition duration-200"
+        >
+          <svg
+            class="w-5 h-5 text-green-600 mr-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+            />
+          </svg>
+          <span class="text-gray-900 font-medium">Voice Changer</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Projects</h2>
+      {% if projects %}
+      <div class="space-y-3">
+        {% for project in projects %}
+        <div
+          class="flex items-center justify-between p-3 rounded-lg bg-gray-50"
+        >
+          <div>
+            <h3 class="font-medium text-gray-900">{{ project.name }}</h3>
+            <p class="text-sm text-gray-500">
+              {{ project.created_at.strftime('%d/%m/%Y') }}
+            </p>
+          </div>
+          <span class="text-xs text-gray-400"
+            >{{ project.audio_files.count() }} files</span
+          >
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-gray-500 text-center py-8">Chưa có projects nào</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Recent Audio Files -->
+  <div class="bg-white rounded-lg shadow-lg p-6">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">
+      Audio Files Gần Đây
+    </h2>
+    {% if recent_audio %}
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Tên File
+            </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Project
+            </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Ngày tạo
+            </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for audio in recent_audio %}
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900">
+                {{ audio.original_filename }}
+              </div>
+              <div class="text-sm text-gray-500">
+                {{ audio.format.upper() }}
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{ audio.project.name if audio.project else 'N/A' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ audio.created_at.strftime('%d/%m/%Y %H:%M') }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <a
+                href="{{ url_for('tts.download_audio', audio_id=audio.id) }}"
+                class="text-blue-600 hover:text-blue-900"
+                >Download</a
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-gray-500 text-center py-8">Chưa có audio files nào</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
