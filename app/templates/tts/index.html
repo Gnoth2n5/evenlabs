@@ -1,331 +1,438 @@
-{% extends "base.html" %}
-
-{% block title %}Text-to-Speech - Speak{% endblock %}
-
+{% extends "base.html" %} {% block title %}Text-to-Speech - Speak{% endblock %}
 {% block content %}
 <div x-data="ttsApp()" class="space-y-8">
-    <!-- Header -->
-    <div class="text-center">
-        <h1 class="text-3xl font-bold text-gray-900 mb-4">Text-to-Speech</h1>
-        <p class="text-lg text-gray-600">Chuyển văn bản thành giọng nói chất lượng cao</p>
-    </div>
+  <!-- Header -->
+  <div class="text-center">
+    <h1 class="text-3xl font-bold text-gray-900 mb-4">Text-to-Speech</h1>
+    <p class="text-lg text-gray-600">
+      Chuyển văn bản thành giọng nói chất lượng cao
+    </p>
+  </div>
 
-    <!-- Main TTS Interface -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Text Input Section -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-semibold mb-4">Nhập văn bản</h2>
-            
-            <div class="space-y-4">
-                <!-- Text Area -->
-                <div>
-                    <label for="text-input" class="block text-sm font-medium text-gray-700 mb-2">
-                        Văn bản cần chuyển đổi
-                    </label>
-                    <textarea 
-                        id="text-input"
-                        x-model="text"
-                        @input="updateCharCount()"
-                        rows="8"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Nhập văn bản cần chuyển thành giọng nói..."
-                    ></textarea>
-                    <div class="flex justify-between items-center mt-2">
-                        <span class="text-sm text-gray-500">
-                            <span x-text="charCount"></span> / 5000 ký tự
-                        </span>
-                        <button 
-                            @click="text = ''"
-                            class="text-sm text-red-600 hover:text-red-700"
-                        >
-                            Xóa
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Voice Selection -->
-                <div>
-                    <label for="voice-select" class="block text-sm font-medium text-gray-700 mb-2">
-                        Chọn giọng nói
-                    </label>
-                    <select 
-                        id="voice-select"
-                        x-model="selectedVoice"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                        <option value="">-- Chọn giọng nói --</option>
-                        <template x-for="voice in voices" :key="voice.voice_id">
-                            <option :value="voice.voice_id" x-text="voice.name"></option>
-                        </template>
-                    </select>
-                </div>
-
-                <!-- Voice Settings -->
-                <div class="space-y-4">
-                    <h3 class="text-lg font-medium text-gray-900">Cài đặt giọng nói</h3>
-                    
-                    <!-- Stability -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Độ ổn định: <span x-text="settings.stability"></span>
-                        </label>
-                        <input 
-                            type="range" 
-                            x-model="settings.stability"
-                            min="0" 
-                            max="1" 
-                            step="0.1"
-                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                        >
-                    </div>
-
-                    <!-- Similarity Boost -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Độ tương đồng: <span x-text="settings.similarity_boost"></span>
-                        </label>
-                        <input 
-                            type="range" 
-                            x-model="settings.similarity_boost"
-                            min="0" 
-                            max="1" 
-                            step="0.1"
-                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                        >
-                    </div>
-
-                    <!-- Style -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Phong cách: <span x-text="settings.style"></span>
-                        </label>
-                        <input 
-                            type="range" 
-                            x-model="settings.style"
-                            min="0" 
-                            max="1" 
-                            step="0.1"
-                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                        >
-                    </div>
-                </div>
-
-                <!-- Generate Button -->
-                <button 
-                    @click="generateSpeech()"
-                    :disabled="!canGenerate"
-                    class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition duration-300"
-                >
-                    <span x-show="!isGenerating">Tạo giọng nói</span>
-                    <span x-show="isGenerating" class="flex items-center justify-center">
-                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Đang tạo...
-                    </span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Audio Output Section -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-semibold mb-4">Kết quả</h2>
-            
-            <div x-show="!currentAudio" class="text-center py-12">
-                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
-                </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có audio</h3>
-                <p class="mt-1 text-sm text-gray-500">Nhập văn bản và chọn giọng nói để bắt đầu</p>
-            </div>
-
-            <div x-show="currentAudio" class="space-y-4">
-                <!-- Audio Player -->
-                <div class="audio-player rounded-lg p-4">
-                    <audio 
-                        x-ref="audioPlayer"
-                        :src="currentAudio.audio_url" 
-                        controls 
-                        class="w-full"
-                    ></audio>
-                </div>
-
-                <!-- Audio Info -->
-                <div class="bg-gray-50 rounded-lg p-4">
-                    <h4 class="font-medium text-gray-900 mb-2">Thông tin audio</h4>
-                    <div class="space-y-2 text-sm text-gray-600">
-                        <div class="flex justify-between">
-                            <span>Tên file:</span>
-                            <span x-text="currentAudio.filename"></span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>ID:</span>
-                            <span x-text="currentAudio.audio_id"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex space-x-3">
-                    <button 
-                        @click="downloadAudio()"
-                        class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
-                    >
-                        Tải xuống
-                    </button>
-                    <button 
-                        @click="deleteAudio()"
-                        class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
-                    >
-                        Xóa
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Audio Files -->
+  <!-- Main TTS Interface -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Text Input Section -->
     <div class="bg-white rounded-lg shadow-lg p-6">
-        <h2 class="text-xl font-semibold mb-4">Audio gần đây</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Placeholder for recent audio files -->
-            <div class="border border-gray-200 rounded-lg p-4">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.794L4.383 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.383l4.017-2.794a1 1 0 011.617.794zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-medium text-gray-900">audio_sample.mp3</h3>
-                        <p class="text-xs text-gray-500">2 phút trước</p>
-                    </div>
-                </div>
-            </div>
+      <h2 class="text-xl font-semibold mb-4">Nhập văn bản</h2>
+
+      <div class="space-y-4">
+        <!-- Text Area -->
+        <div>
+          <label
+            for="text-input"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Văn bản cần chuyển đổi
+          </label>
+          <textarea
+            id="text-input"
+            x-model="text"
+            @input="updateCharCount()"
+            rows="8"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Nhập văn bản cần chuyển thành giọng nói..."
+          ></textarea>
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-sm text-gray-500">
+              <span x-text="charCount"></span> / 5000 ký tự
+            </span>
+            <button
+              @click="text = ''"
+              class="text-sm text-red-600 hover:text-red-700"
+            >
+              Xóa
+            </button>
+          </div>
         </div>
+
+        <!-- Voice Selection -->
+        <div>
+          <label
+            for="voice-select"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Chọn giọng nói
+          </label>
+          <select
+            id="voice-select"
+            x-model="selectedVoice"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="">-- Chọn giọng nói --</option>
+            <template x-for="voice in voices" :key="voice.voice_id">
+              <option :value="voice.voice_id" x-text="voice.name"></option>
+            </template>
+          </select>
+        </div>
+
+        <!-- Voice ID Manual Input -->
+        <div>
+          <label
+            for="voice-id-input"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Hoặc nhập Voice ID tuỳ chọn
+          </label>
+          <input
+            id="voice-id-input"
+            type="text"
+            x-model="manualVoiceId"
+            placeholder="Nhập voice_id tuỳ chọn (nếu có)"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+
+        <!-- Model Selection -->
+        <div>
+          <label
+            for="model-select"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Chọn Model
+          </label>
+          <select
+            id="model-select"
+            x-model="selectedModel"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="">-- Chọn Model --</option>
+            <template x-for="model in models" :key="model.model_id">
+              <option :value="model.model_id" x-text="model.name"></option>
+            </template>
+          </select>
+        </div>
+
+        <!-- Voice Settings -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-medium text-gray-900">Cài đặt giọng nói</h3>
+
+          <!-- Stability -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Độ ổn định: <span x-text="settings.stability"></span>
+            </label>
+            <input
+              type="range"
+              x-model="settings.stability"
+              min="0"
+              max="1"
+              step="0.1"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+          </div>
+
+          <!-- Similarity Boost -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Độ tương đồng: <span x-text="settings.similarity_boost"></span>
+            </label>
+            <input
+              type="range"
+              x-model="settings.similarity_boost"
+              min="0"
+              max="1"
+              step="0.1"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+          </div>
+
+          <!-- Style -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Phong cách: <span x-text="settings.style"></span>
+            </label>
+            <input
+              type="range"
+              x-model="settings.style"
+              min="0"
+              max="1"
+              step="0.1"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+          </div>
+        </div>
+
+        <!-- Generate Button -->
+        <button
+          @click="generateSpeech()"
+          :disabled="!canGenerate"
+          class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition duration-300"
+        >
+          <span x-show="!isGenerating">Tạo giọng nói</span>
+          <span x-show="isGenerating" class="flex items-center justify-center">
+            <svg
+              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Đang tạo...
+          </span>
+        </button>
+      </div>
     </div>
+
+    <!-- Audio Output Section -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-xl font-semibold mb-4">Kết quả</h2>
+
+      <div x-show="!currentAudio" class="text-center py-12">
+        <svg
+          class="mx-auto h-12 w-12 text-gray-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+          />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có audio</h3>
+        <p class="mt-1 text-sm text-gray-500">
+          Nhập văn bản và chọn giọng nói để bắt đầu
+        </p>
+      </div>
+
+      <div x-show="currentAudio" class="space-y-4">
+        <!-- Audio Player -->
+        <div class="audio-player rounded-lg p-4">
+          <audio
+            x-ref="audioPlayer"
+            :src="currentAudio.audio_url"
+            controls
+            class="w-full"
+          ></audio>
+        </div>
+
+        <!-- Audio Info -->
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h4 class="font-medium text-gray-900 mb-2">Thông tin audio</h4>
+          <div class="space-y-2 text-sm text-gray-600">
+            <div class="flex justify-between">
+              <span>Tên file:</span>
+              <span x-text="currentAudio.filename"></span>
+            </div>
+            <div class="flex justify-between">
+              <span>ID:</span>
+              <span x-text="currentAudio.audio_id"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex space-x-3">
+          <button
+            @click="downloadAudio()"
+            class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
+          >
+            Tải xuống
+          </button>
+          <button
+            @click="deleteAudio()"
+            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
+          >
+            Xóa
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Audio Files -->
+  <div class="bg-white rounded-lg shadow-lg p-6">
+    <h2 class="text-xl font-semibold mb-4">Audio gần đây</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Placeholder for recent audio files -->
+      <div class="border border-gray-200 rounded-lg p-4">
+        <div class="flex items-center space-x-3">
+          <div
+            class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 text-blue-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.794L4.383 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.383l4.017-2.794a1 1 0 011.617.794zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-sm font-medium text-gray-900">audio_sample.mp3</h3>
+            <p class="text-xs text-gray-500">2 phút trước</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-function ttsApp() {
+  function ttsApp() {
     return {
-        text: '',
-        selectedVoice: '',
-        voices: [],
-        settings: {
-            stability: 0.5,
-            similarity_boost: 0.5,
-            style: 0.0
-        },
-        currentAudio: null,
-        isGenerating: false,
-        charCount: 0,
+      text: "",
+      selectedVoice: "",
+      voices: [],
+      settings: {
+        stability: 0.5,
+        similarity_boost: 0.5,
+        style: 0.0,
+      },
+      currentAudio: null,
+      isGenerating: false,
+      charCount: 0,
+      manualVoiceId: "",
+      selectedModel: "",
+      models: [],
 
-        init() {
-            this.loadVoices();
-            this.updateCharCount();
-        },
+      init() {
+        this.loadVoices();
+        this.loadModels();
+        this.updateCharCount();
 
-        updateCharCount() {
-            this.charCount = this.text.length;
-        },
+        // Set default model for Vietnamese
+        this.selectedModel = "eleven_multilingual_v2";
+      },
 
-        get canGenerate() {
-            return this.text.trim() && this.selectedVoice && !this.isGenerating;
-        },
+      updateCharCount() {
+        this.charCount = this.text.length;
+      },
 
-        async loadVoices() {
-            try {
-                const response = await fetch('/tts/voices');
-                const data = await response.json();
-                this.voices = data.voices || [];
-            } catch (error) {
-                console.error('Error loading voices:', error);
-            }
-        },
+      get canGenerate() {
+        return (
+          this.text.trim() &&
+          (this.selectedVoice || this.manualVoiceId) &&
+          !this.isGenerating
+        );
+      },
 
-        async generateSpeech() {
-            if (!this.canGenerate) return;
-
-            this.isGenerating = true;
-
-            try {
-                const response = await fetch('/tts/generate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        text: this.text,
-                        voice_id: this.selectedVoice,
-                        settings: this.settings
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    this.currentAudio = data;
-                    // Auto play audio
-                    setTimeout(() => {
-                        if (this.$refs.audioPlayer) {
-                            this.$refs.audioPlayer.play();
-                        }
-                    }, 100);
-                } else {
-                    alert('Lỗi: ' + data.error);
-                }
-            } catch (error) {
-                console.error('Error generating speech:', error);
-                alert('Có lỗi xảy ra khi tạo giọng nói');
-            } finally {
-                this.isGenerating = false;
-            }
-        },
-
-        async downloadAudio() {
-            if (!this.currentAudio) return;
-            
-            try {
-                const response = await fetch(`/tts/download/${this.currentAudio.audio_id}`);
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = this.currentAudio.filename;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-            } catch (error) {
-                console.error('Error downloading audio:', error);
-                alert('Có lỗi xảy ra khi tải xuống');
-            }
-        },
-
-        async deleteAudio() {
-            if (!this.currentAudio) return;
-            
-            if (!confirm('Bạn có chắc muốn xóa audio này?')) return;
-
-            try {
-                const response = await fetch(`/tts/delete/${this.currentAudio.audio_id}`, {
-                    method: 'POST'
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    this.currentAudio = null;
-                } else {
-                    alert('Lỗi: ' + data.error);
-                }
-            } catch (error) {
-                console.error('Error deleting audio:', error);
-                alert('Có lỗi xảy ra khi xóa audio');
-            }
+      async loadVoices() {
+        try {
+          const response = await fetch("/tts/voices");
+          const data = await response.json();
+          this.voices = data.voices || [];
+        } catch (error) {
+          console.error("Error loading voices:", error);
         }
-    }
-}
+      },
+
+      async generateSpeech() {
+        if (!this.canGenerate) return;
+
+        this.isGenerating = true;
+
+        try {
+          const response = await fetch("/tts/generate", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              text: this.text,
+              voice_id: this.manualVoiceId || this.selectedVoice,
+              settings: this.settings,
+              model_id: this.selectedModel || "eleven_multilingual_v2",
+            }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            this.currentAudio = data;
+            // Auto play audio
+            setTimeout(() => {
+              if (this.$refs.audioPlayer) {
+                this.$refs.audioPlayer.play();
+              }
+            }, 100);
+          } else {
+            alert("Lỗi: " + data.error);
+          }
+        } catch (error) {
+          console.error("Error generating speech:", error);
+          alert("Có lỗi xảy ra khi tạo giọng nói");
+        } finally {
+          this.isGenerating = false;
+        }
+      },
+
+      async downloadAudio() {
+        if (!this.currentAudio) return;
+
+        try {
+          const response = await fetch(
+            `/tts/download/${this.currentAudio.audio_id}`
+          );
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = this.currentAudio.filename;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        } catch (error) {
+          console.error("Error downloading audio:", error);
+          alert("Có lỗi xảy ra khi tải xuống");
+        }
+      },
+
+      async deleteAudio() {
+        if (!this.currentAudio) return;
+
+        if (!confirm("Bạn có chắc muốn xóa audio này?")) return;
+
+        try {
+          const response = await fetch(
+            `/tts/delete/${this.currentAudio.audio_id}`,
+            {
+              method: "POST",
+            }
+          );
+          const data = await response.json();
+
+          if (data.success) {
+            this.currentAudio = null;
+          } else {
+            alert("Lỗi: " + data.error);
+          }
+        } catch (error) {
+          console.error("Error deleting audio:", error);
+          alert("Có lỗi xảy ra khi xóa audio");
+        }
+      },
+
+      async loadModels() {
+        try {
+          const response = await fetch("/tts/models");
+          const data = await response.json();
+          this.models = data.models || [];
+        } catch (error) {
+          console.error("Error loading models:", error);
+        }
+      },
+    };
+  }
 </script>
-{% endblock %} 
+{% endblock %}

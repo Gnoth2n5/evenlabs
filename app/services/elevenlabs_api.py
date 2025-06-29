@@ -82,8 +82,32 @@ class ElevenLabsService:
             logger.error(f"ElevenLabs API error: {e}")
             return {"success": False, "error": str(e)}
 
+    def get_models(self):
+        """Lấy danh sách các model có sẵn"""
+        try:
+            url = "https://api.elevenlabs.io/v1/models"
+            headers = {"Accept": "application/json", "xi-api-key": self.api_key}
+
+            response = requests.get(url, headers=headers)
+
+            if response.status_code == 200:
+                models_data = response.json()
+                return {"success": True, "models": models_data}
+            else:
+                logger.error(
+                    f"ElevenLabs models API error: {response.status_code} - {response.text}"
+                )
+                return {
+                    "success": False,
+                    "error": f"HTTP {response.status_code}: {response.text}",
+                }
+
+        except Exception as e:
+            logger.error(f"ElevenLabs models API error: {e}")
+            return {"success": False, "error": str(e)}
+
     def text_to_speech(
-        self, text, voice_id="21m00Tcm4TlvDq8ikWAM", model_id="eleven_monolingual_v1"
+        self, text, voice_id="21m00Tcm4TlvDq8ikWAM", model_id="eleven_multilingual_v2"
     ):
         """Chuyển text thành speech"""
         try:

@@ -45,6 +45,18 @@ def index():
         return render_template("tts/index.html", voices=[], projects=[])
 
 
+@tts_bp.route("/models")
+@login_required
+def get_models():
+    """API endpoint để lấy danh sách models"""
+    try:
+        elevenlabs_service = ElevenLabsService()
+        result = elevenlabs_service.get_models()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
 @tts_bp.route("/generate", methods=["POST"])
 @login_required
 def generate_speech():
@@ -53,6 +65,7 @@ def generate_speech():
         data = request.get_json()
         text = data.get("text", "").strip()
         voice_id = data.get("voice_id", "21m00Tcm4TlvDq8ikWAM")
+        model_id = data.get("model_id", "eleven_multilingual_v2")
         project_id = data.get("project_id")
 
         if not text:
@@ -62,7 +75,7 @@ def generate_speech():
         elevenlabs_service = ElevenLabsService()
 
         # Generate speech
-        result = elevenlabs_service.text_to_speech(text, voice_id)
+        result = elevenlabs_service.text_to_speech(text, voice_id, model_id)
 
         if result["success"]:
             # Lưu vào database
