@@ -9,9 +9,25 @@ class Config:
     """Base configuration class"""
 
     SECRET_KEY = os.environ.get("SECRET_KEY") or "dev-secret-key-change-in-production"
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL"
-    ) or "sqlite:///" + os.path.join(basedir, "app.db")
+
+    # Database configuration - đơn giản hóa
+    DB_CONNECTION = os.environ.get("DB_CONNECTION", "sqlite")
+
+    if DB_CONNECTION == "mysql":
+        # MySQL configuration
+        DB_HOST = os.environ.get("DB_HOST", "127.0.0.1")
+        DB_PORT = int(os.environ.get("DB_PORT", 3306))
+        DB_DATABASE = os.environ.get("DB_DATABASE", "speak_app")
+        DB_USERNAME = os.environ.get("DB_USERNAME", "root")
+        DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
+
+        SQLALCHEMY_DATABASE_URI = (
+            f"mysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}"
+        )
+    else:
+        # SQLite configuration (default) - luôn sử dụng SQLite nếu không có .env
+        SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "app.db")
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # ElevenLabs API Configuration
@@ -24,22 +40,18 @@ class Config:
     AUDIO_FOLDER = os.path.join(basedir, "app/static/audio")
     ALLOWED_EXTENSIONS = {"mp3", "wav", "flac", "m4a", "ogg"}
 
-    # Redis configuration (for caching and background tasks)
+    # Redis configuration (optional)
     REDIS_URL = os.environ.get("REDIS_URL") or "redis://localhost:6379/0"
 
     # Pagination
     POSTS_PER_PAGE = 10
 
     # Security
-    SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+    SESSION_COOKIE_SECURE = False
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
 
-    # Rate limiting
-    RATELIMIT_ENABLED = True
-    RATELIMIT_STORAGE_URL = REDIS_URL
-
-    # Email configuration (for future use)
+    # Email configuration (optional)
     MAIL_SERVER = os.environ.get("MAIL_SERVER")
     MAIL_PORT = int(os.environ.get("MAIL_PORT") or 587)
     MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS", "true").lower() in ["true", "on", "1"]
@@ -54,7 +66,6 @@ class DevelopmentConfig(Config):
     """Development configuration"""
 
     DEBUG = True
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 class ProductionConfig(Config):
@@ -62,11 +73,6 @@ class ProductionConfig(Config):
 
     DEBUG = False
     SESSION_COOKIE_SECURE = True
-
-    @classmethod
-    def init_app(cls, app):
-        # Production specific initialization
-        pass
 
 
 class TestingConfig(Config):

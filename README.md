@@ -31,7 +31,7 @@ Một web application hoàn chỉnh cho phép chuyển đổi văn bản thành 
 ### Database
 
 - **SQLite** (development)
-- **PostgreSQL** (production)
+- **MySQL** (production)
 
 ## 🚀 Cài đặt và chạy
 
@@ -67,21 +67,13 @@ cp env.example .env
 ### 5. Khởi tạo database
 
 ```bash
-flask init-db
+python init_db.py
 ```
 
-### 6. Tạo admin user (tùy chọn)
-
-```bash
-flask create-admin
-```
-
-### 7. Chạy ứng dụng
+### 6. Chạy ứng dụng
 
 ```bash
 python run.py
-# hoặc
-flask run
 ```
 
 Ứng dụng sẽ chạy tại `http://localhost:5000`
@@ -99,14 +91,32 @@ FLASK_APP=run.py
 FLASK_ENV=development
 
 # Database Configuration
-DATABASE_URL=sqlite:///app.db
+DB_CONNECTION=sqlite
+
+# MySQL Configuration (optional)
+# DB_CONNECTION=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=speak_app
+# DB_USERNAME=root
+# DB_PASSWORD=
 
 # ElevenLabs API Configuration
 ELEVENLABS_API_KEY=your-elevenlabs-api-key
-
-# Redis Configuration (optional)
-REDIS_URL=redis://localhost:6379/0
 ```
+
+### Database Setup
+
+#### SQLite (Development) - Mặc định
+
+- Không cần cài đặt thêm
+- Database file sẽ được tạo tự động
+
+#### MySQL (Production)
+
+- Cài đặt MySQL Server
+- Cấu hình trong file .env
+- Chạy `python init_db.py` để tạo tables
 
 ### ElevenLabs API Key
 
@@ -140,6 +150,7 @@ speak/
 │   └── utils/               # Utility functions
 ├── config.py               # Configuration
 ├── run.py                  # Application entry point
+├── init_db.py              # Database initialization
 ├── requirements.txt        # Python dependencies
 └── README.md              # This file
 ```
@@ -172,7 +183,6 @@ speak/
 
 - API key encryption
 - File upload validation
-- Rate limiting
 - Input sanitization
 - CORS configuration
 

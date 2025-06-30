@@ -2,13 +2,11 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_migrate import Migrate
 from config import config
 
 # Initialize extensions
 db = SQLAlchemy()
 login_manager = LoginManager()
-migrate = Migrate()
 
 
 def create_app(config_name="default"):
@@ -16,10 +14,15 @@ def create_app(config_name="default"):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
 
+    # Configure MySQL engine if using MySQL
+    if app.config["SQLALCHEMY_DATABASE_URI"].startswith("mysql://"):
+        import pymysql
+
+        pymysql.install_as_MySQLdb()
+
     # Initialize extensions with app
     db.init_app(app)
     login_manager.init_app(app)
-    migrate.init_app(app, db)
 
     # Configure login manager
     login_manager.login_view = "auth.login"
