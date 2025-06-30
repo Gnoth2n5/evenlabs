@@ -65,7 +65,7 @@ def generate_speech():
         data = request.get_json()
         text = data.get("text", "").strip()
         voice_id = data.get("voice_id", "21m00Tcm4TlvDq8ikWAM")
-        model_id = data.get("model_id", "eleven_multilingual_v2")
+        model_id = data.get("model_id", "eleven_turbo_v2_5")
         project_id = data.get("project_id")
 
         if not text:

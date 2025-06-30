@@ -90,6 +90,9 @@
           >
             Chọn Model
           </label>
+          <small class="text-xs text-gray-500 text-red-500 font-semibold">
+            Mặc định: Turbo v2.5 (Nhanh, chất lượng tốt)
+          </small>
           <select
             id="model-select"
             x-model="selectedModel"
@@ -275,12 +278,10 @@
       models: [],
 
       init() {
+        this.selectedModel = "eleven_turbo_v2_5";
         this.loadVoices();
         this.loadModels();
         this.updateCharCount();
-
-        // Set default model for Vietnamese
-        this.selectedModel = "eleven_multilingual_v2";
       },
 
       updateCharCount() {
