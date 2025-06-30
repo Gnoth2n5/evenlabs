@@ -24,9 +24,6 @@ class User(UserMixin, db.Model):
     projects = db.relationship(
         "Project", backref="user", lazy="dynamic", cascade="all, delete-orphan"
     )
-    voice_models = db.relationship(
-        "VoiceModel", backref="user", lazy="dynamic", cascade="all, delete-orphan"
-    )
 
     def set_password(self, password):
         """Set password hash"""

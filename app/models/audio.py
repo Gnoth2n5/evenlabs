@@ -48,25 +48,3 @@ class AudioFile(db.Model):
 
     def __repr__(self):
         return f"<AudioFile {self.filename}>"
-
-
-class VoiceModel(db.Model):
-    """Voice model for storing voice information"""
-
-    __tablename__ = "voice_models"
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    voice_id = db.Column(db.String(100), nullable=False)  # ElevenLabs voice ID
-    is_cloned = db.Column(db.Boolean, default=False)
-    description = db.Column(db.Text)
-    language = db.Column(db.String(10))
-    gender = db.Column(db.String(10))
-    age_group = db.Column(db.String(20))
-    accent = db.Column(db.String(50))
-    sample_file_path = db.Column(db.String(500))  # Path to sample audio file
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return f"<VoiceModel {self.name}>"

@@ -88,8 +88,6 @@ def main():
         "app/static/audio",
         "app/static/uploads",
         "app/templates/tts",
-        "app/templates/voice_cloning",
-        "app/templates/voice_changer",
         "app/templates/audio_effects",
     ]
 

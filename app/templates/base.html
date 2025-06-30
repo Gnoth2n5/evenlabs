@@ -79,18 +79,6 @@
             >
               TTS
             </a>
-            <a
-              href="{{ url_for('voice_cloning.index') }}"
-              class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Voice Cloning
-            </a>
-            <a
-              href="{{ url_for('voice_changer.index') }}"
-              class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Voice Changer
-            </a>
             <div class="relative" x-data="{ open: false }">
               <button
                 @click="open = !open"
@@ -227,20 +215,6 @@
               <li>
                 <a href="{{ url_for('tts.index') }}" class="hover:text-white"
                   >Text-to-Speech</a
-                >
-              </li>
-              <li>
-                <a
-                  href="{{ url_for('voice_cloning.index') }}"
-                  class="hover:text-white"
-                  >Voice Cloning</a
-                >
-              </li>
-              <li>
-                <a
-                  href="{{ url_for('voice_changer.index') }}"
-                  class="hover:text-white"
-                  >Voice Changer</a
                 >
               </li>
               <li>

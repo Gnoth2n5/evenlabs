@@ -1,7 +1,6 @@
 import os
 from app import create_app, db
 from app.models.user import User
-from app.models.audio import Project, AudioFile, VoiceModel
 
 app = create_app(os.getenv("FLASK_ENV") or "default")
 
@@ -12,9 +11,6 @@ def make_shell_context():
     return {
         "db": db,
         "User": User,
-        "Project": Project,
-        "AudioFile": AudioFile,
-        "VoiceModel": VoiceModel,
     }
 
 
