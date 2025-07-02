@@ -88,7 +88,6 @@ def main():
         "app/static/audio",
         "app/static/uploads",
         "app/templates/tts",
-        "app/templates/audio_effects",
     ]
 
     print("📁 Creating directories...")

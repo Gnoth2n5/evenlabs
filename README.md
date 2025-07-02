@@ -1,11 +1,11 @@
 # 🎤 Speak - Ứng dụng Text-to-Speech với ElevenLabs API
 
-Một ứng dụng web hoàn chỉnh cho phép chuyển đổi văn bản thành giọng nói chất lượng cao sử dụng ElevenLabs API, với các tính năng nâng cao như voice cloning, audio effects và quản lý projects.
+Một ứng dụng web hoàn chỉnh cho phép chuyển đổi văn bản thành giọng nói chất lượng cao sử dụng ElevenLabs API, với các tính năng nâng cao như voice cloning và quản lý projects.
 
 ## ✨ Tính năng chính
 
 - **Text-to-Speech (TTS)**: Chuyển văn bản thành giọng nói với 1000+ giọng nói
-- **Audio Effects**: Áp dụng các hiệu ứng âm thanh cho audio files
+
 - **Project Management**: Quản lý và tổ chức audio files theo projects
 - **Multi-language Support**: Hỗ trợ 29+ ngôn ngữ
 - **Real-time Streaming**: Stream audio với độ trễ thấp
@@ -170,19 +170,6 @@ python init_db.py
 5. Click **"Generate"** để tạo audio
 6. Download hoặc lưu audio file
 
-### 3. Audio Effects
-
-1. Truy cập **Audio Effects** từ menu
-2. Upload audio file (MP3, WAV, FLAC, M4A, OGG)
-3. Chọn hiệu ứng âm thanh:
-   - **Volume**: Âm lượng (0-100%)
-   - **Speed**: Tốc độ phát (0.5-2.0x)
-   - **Pitch**: Cao độ (-12 đến +12 semitones)
-   - **Echo**: Hiệu ứng echo (0-100%)
-   - **Reverb**: Hiệu ứng reverb (0-100%)
-4. Click **"Apply Effects"** để xử lý
-5. Download audio đã xử lý
-
 ## 🔐 Bảo mật
 
 - **API Key Encryption**: ElevenLabs API key được mã hóa
@@ -280,14 +267,6 @@ gunicorn -w 4 -b 0.0.0.0:5000 run:app --log-level debug
 - `POST /tts/stream` - Stream audio
 - `GET /tts/download/<id>` - Download audio file
 - `POST /tts/delete/<id>` - Xóa audio file
-
-### Audio Effects
-
-- `GET /audio-effects` - Giao diện audio effects
-- `POST /audio-effects/apply` - Áp dụng audio effects
-- `POST /audio-effects/preview` - Preview audio effects
-- `GET /audio-effects/download/<id>` - Download audio file
-- `GET /audio-effects/library` - Thư viện hiệu ứng
 
 ## 🤝 Đóng góp
 

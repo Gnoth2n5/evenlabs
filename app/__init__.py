@@ -33,12 +33,10 @@ def create_app(config_name="default"):
     from app.routes.auth import auth_bp
     from app.routes.main import main_bp
     from app.routes.tts import tts_bp
-    from app.routes.audio_effects import audio_effects_bp
 
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(main_bp)
     app.register_blueprint(tts_bp, url_prefix="/tts")
-    app.register_blueprint(audio_effects_bp, url_prefix="/audio-effects")
 
     # Create upload directories if they don't exist
     os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)

@@ -68,7 +68,7 @@ nói{% endblock %} {% block content %}
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <!-- Text-to-Speech -->
       <div
         class="text-center p-6 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-lg transition duration-300"
@@ -97,39 +97,6 @@ nói{% endblock %} {% block content %}
         <a
           href="{{ url_for('tts.index') }}"
           class="text-blue-600 hover:text-blue-700 font-medium"
-        >
-          Thử ngay →
-        </a>
-      </div>
-
-      <!-- Audio Effects -->
-      <div
-        class="text-center p-6 rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100 hover:shadow-lg transition duration-300"
-      >
-        <div
-          class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4"
-        >
-          <svg
-            class="w-8 h-8 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-            />
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Audio Effects</h3>
-        <p class="text-gray-600 mb-4">
-          Tuỳ chỉnh hiệu ứng âm thanh cho file audio của bạn
-        </p>
-        <a
-          href="{{ url_for('audio_effects.index') }}"
-          class="text-yellow-600 hover:text-yellow-700 font-medium"
         >
           Thử ngay →
         </a>

@@ -91,7 +91,7 @@ block content %}
   <!-- Quick Actions -->
   <div>
     <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 gap-6">
       <a
         href="{{ url_for('tts.index') }}"
         class="bg-white rounded-lg shadow-lg p-6 flex items-center transition duration-200 hover:bg-blue-50 group"
@@ -119,36 +119,6 @@ block content %}
           </p>
           <p class="text-sm text-gray-500">
             Chuyển văn bản thành giọng nói tự nhiên
-          </p>
-        </div>
-      </a>
-      <a
-        href="{{ url_for('audio_effects.index') }}"
-        class="bg-white rounded-lg shadow-lg p-6 flex items-center transition duration-200 hover:bg-yellow-50 group"
-      >
-        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-            />
-          </svg>
-        </div>
-        <div class="ml-4">
-          <p
-            class="text-lg font-medium text-gray-900 group-hover:text-yellow-700"
-          >
-            Audio Effects
-          </p>
-          <p class="text-sm text-gray-500">
-            Tuỳ chỉnh hiệu ứng âm thanh cho file audio
           </p>
         </div>
       </a>

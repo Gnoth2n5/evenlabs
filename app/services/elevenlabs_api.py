@@ -130,3 +130,36 @@ class ElevenLabsService:
         except Exception as e:
             logger.error(f"ElevenLabs TTS error: {e}")
             return {"success": False, "error": str(e)}
+
+
+
+    def get_audio_history(self):
+        """Lấy lịch sử audio đã tạo"""
+        try:
+            history = History.from_api()
+            return {
+                "success": True,
+                "history": [
+                    {
+                        "history_item_id": item.history_item_id,
+                        "request_id": item.request_id,
+                        "voice_id": item.voice_id,
+                        "voice_name": item.voice_name,
+                        "model_id": item.model_id,
+                        "text": item.text,
+                        "date_unix": item.date_unix,
+                        "character_count_change_from": item.character_count_change_from,
+                        "character_count_change_to": item.character_count_change_to,
+                        "content_type": item.content_type,
+                        "state": item.state,
+                        "settings": item.settings,
+                        "feedback": item.feedback,
+                        "share_link_id": item.share_link_id,
+                        "source": item.source,
+                    }
+                    for item in history
+                ],
+            }
+        except Exception as e:
+            logger.error(f"ElevenLabs history error: {e}")
+            return {"success": False, "error": str(e)}

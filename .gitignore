@@ -146,4 +146,7 @@ app/static/uploads/*
 
 # OS
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Project Plan
+PROJECT_PLAN.md
