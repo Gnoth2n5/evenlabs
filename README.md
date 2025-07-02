@@ -1,26 +1,26 @@
-# 🎤 Speak - Web App Text-to-Speech với ElevenLabs API
+# 🎤 Speak - Ứng dụng Text-to-Speech với ElevenLabs API
 
-Một web application hoàn chỉnh cho phép chuyển đổi văn bản thành giọng nói chất lượng cao sử dụng ElevenLabs API, với các tính năng nâng cao như voice cloning, voice changer và quản lý projects.
+Một ứng dụng web hoàn chỉnh cho phép chuyển đổi văn bản thành giọng nói chất lượng cao sử dụng ElevenLabs API, với các tính năng nâng cao như voice cloning, audio effects và quản lý projects.
 
 ## ✨ Tính năng chính
 
 - **Text-to-Speech (TTS)**: Chuyển văn bản thành giọng nói với 1000+ giọng nói
-- **Voice Cloning**: Tạo giọng nói cá nhân từ audio sample
-- **Voice Changer**: Chuyển đổi giọng nói trong audio files
-- **Project Management**: Quản lý và tổ chức audio files
+- **Audio Effects**: Áp dụng các hiệu ứng âm thanh cho audio files
+- **Project Management**: Quản lý và tổ chức audio files theo projects
 - **Multi-language Support**: Hỗ trợ 29+ ngôn ngữ
 - **Real-time Streaming**: Stream audio với độ trễ thấp
-- **User Authentication**: Hệ thống đăng nhập/đăng ký
+- **User Authentication**: Hệ thống đăng nhập/đăng ký an toàn
 
 ## 🛠️ Công nghệ sử dụng
 
 ### Backend
 
-- **Flask** - Web framework
-- **SQLAlchemy** - ORM database
+- **Flask 2.3.3** - Web framework
+- **SQLAlchemy 3.0.5** - ORM database
 - **ElevenLabs API** - Text-to-Speech service
-- **Flask-Login** - User authentication
-- **Pydub** - Audio processing
+- **Flask-Login 0.6.3** - User authentication
+- **Pydub 0.25.1** - Audio processing
+- **Werkzeug 2.3.7** - WSGI utilities
 
 ### Frontend
 
@@ -30,161 +30,166 @@ Một web application hoàn chỉnh cho phép chuyển đổi văn bản thành 
 
 ### Database
 
-- **SQLite** (development)
-- **MySQL** (production)
+- **SQLite** (development) - Mặc định
+- **MySQL** (production) - Tùy chọn
 
-## 🚀 Cài đặt và chạy
+## 🚀 Hướng dẫn cài đặt
 
-### 1. Clone repository
+### Yêu cầu hệ thống
+
+- **Python 3.8+**
+- **pip** (Python package manager)
+- **Git** (để clone repository)
+- **ElevenLabs API Key** (đăng ký tại [elevenlabs.io](https://elevenlabs.io/))
+
+### Bước 1: Clone repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Gnoth2n5/evenlabs
 cd speak
 ```
 
-### 2. Tạo virtual environment
+### Bước 2: Tạo virtual environment
+
+**Windows:**
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# hoặc
-venv\Scripts\activate  # Windows
+venv\Scripts\activate
 ```
 
-### 3. Cài đặt dependencies
+**Linux/Mac:**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Bước 3: Cài đặt dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Cấu hình environment
+### Bước 4: Cấu hình environment
 
 ```bash
+# Copy file mẫu
 cp env.example .env
-# Chỉnh sửa file .env với API key của bạn
+
+# Chỉnh sửa file .env với thông tin của bạn
 ```
 
-### 5. Khởi tạo database
+**Nội dung file `.env`:**
+
+```env
+# Flask Configuration
+FLASK_APP=run.py
+FLASK_ENV=development
+
+# Database Configuration
+DB_CONNECTION=mysql
+
+# MySQL Configuration (optional)
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=speak_app
+DB_USERNAME=root
+DB_PASSWORD=
+
+# ElevenLabs API Configuration (BẮT BUỘC)
+ELEVENLABS_API_KEY=your-elevenlabs-api-key-here
+
+```
+
+### Bước 5: Tạo DB trên phpMyAdmin trùng với DB trong env
+
+### Bước 6: Khởi tạo database
 
 ```bash
 python init_db.py
 ```
 
-### 6. Chạy ứng dụng
+### Bước 7: Chạy ứng dụng
 
 ```bash
 python run.py
 ```
 
-Ứng dụng sẽ chạy tại `http://localhost:5000`
+Ứng dụng sẽ chạy tại: **http://localhost:5000**
 
-## 🔧 Cấu hình
+## 🔧 Cấu hình chi tiết
 
-### Environment Variables
+### Lấy ElevenLabs API Key
 
-Tạo file `.env` với các biến sau:
+1. Truy cập [ElevenLabs](https://elevenlabs.io/)
+2. Đăng ký tài khoản miễn phí
+3. Vào Dashboard → Profile Settings → API Key
+4. Copy API key và thêm vào file `.env`
+
+### Cấu hình MySQL (tùy chọn)
+
+Nếu muốn sử dụng MySQL thay vì SQLite:
+
+1. **Cài đặt MySQL Server**
+2. **Cập nhật file `.env`:**
 
 ```env
-# Flask Configuration
-SECRET_KEY=your-super-secret-key
-FLASK_APP=run.py
-FLASK_ENV=development
-
-# Database Configuration
-DB_CONNECTION=sqlite
-
-# MySQL Configuration (optional)
-# DB_CONNECTION=mysql
-# DB_HOST=127.0.0.1
-# DB_PORT=3306
-# DB_DATABASE=speak_app
-# DB_USERNAME=root
-# DB_PASSWORD=
-
-# ElevenLabs API Configuration
-ELEVENLABS_API_KEY=your-elevenlabs-api-key
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=speak_app
+DB_USERNAME=root
+DB_PASSWORD=your-mysql-password
 ```
 
-### Database Setup
+3. **Chạy lại init_db.py:**
 
-#### SQLite (Development) - Mặc định
-
-- Không cần cài đặt thêm
-- Database file sẽ được tạo tự động
-
-#### MySQL (Production)
-
-- Cài đặt MySQL Server
-- Cấu hình trong file .env
-- Chạy `python init_db.py` để tạo tables
-
-### ElevenLabs API Key
-
-1. Đăng ký tài khoản tại [ElevenLabs](https://elevenlabs.io/)
-2. Lấy API key từ dashboard
-3. Thêm API key vào file `.env`
-
-## 📁 Cấu trúc dự án
-
-```
-speak/
-├── app/
-│   ├── __init__.py          # Flask app factory
-│   ├── routes/              # Blueprint routes
-│   │   ├── main.py         # Main routes
-│   │   ├── tts.py          # Text-to-Speech routes
-│   │   ├── voice_cloning.py # Voice cloning routes
-│   │   ├── voice_changer.py # Voice changer routes
-│   │   └── audio_effects.py # Audio effects routes
-│   ├── models/              # Database models
-│   │   ├── user.py         # User model
-│   │   └── audio.py        # Audio models
-│   ├── services/            # Business logic
-│   │   └── elevenlabs_api.py # ElevenLabs API service
-│   ├── static/              # Static files
-│   │   ├── css/
-│   │   ├── js/
-│   │   ├── audio/          # Generated audio files
-│   │   └── uploads/        # Uploaded files
-│   ├── templates/           # HTML templates
-│   └── utils/               # Utility functions
-├── config.py               # Configuration
-├── run.py                  # Application entry point
-├── init_db.py              # Database initialization
-├── requirements.txt        # Python dependencies
-└── README.md              # This file
+```bash
+python init_db.py
 ```
 
-## 🎯 Sử dụng
+## 🎯 Hướng dẫn sử dụng
 
-### Text-to-Speech
+### 1. Đăng ký tài khoản
+
+1. Truy cập http://localhost:5000
+2. Click "Đăng ký" để tạo tài khoản mới
+3. Điền thông tin và tạo tài khoản
+
+### 2. Text-to-Speech
 
 1. Đăng nhập vào hệ thống
-2. Truy cập `/tts`
+2. Truy cập **Text-to-Speech** từ menu
 3. Nhập văn bản cần chuyển đổi
-4. Chọn giọng nói và cài đặt
-5. Click "Generate" để tạo audio
+4. Chọn giọng nói và cài đặt:
+   - **Voice**: Chọn giọng nói
+   - **Stability**: Độ ổn định (0-1)
+   - **Similarity Boost**: Tăng độ tương tự (0-1)
+5. Click **"Generate"** để tạo audio
+6. Download hoặc lưu audio file
 
-### Voice Cloning
+### 3. Audio Effects
 
-1. Truy cập `/voice-cloning`
-2. Upload audio samples (1-5 phút)
-3. Đặt tên và mô tả cho voice
-4. Click "Create Voice"
+1. Truy cập **Audio Effects** từ menu
+2. Upload audio file (MP3, WAV, FLAC, M4A, OGG)
+3. Chọn hiệu ứng âm thanh:
+   - **Volume**: Âm lượng (0-100%)
+   - **Speed**: Tốc độ phát (0.5-2.0x)
+   - **Pitch**: Cao độ (-12 đến +12 semitones)
+   - **Echo**: Hiệu ứng echo (0-100%)
+   - **Reverb**: Hiệu ứng reverb (0-100%)
+4. Click **"Apply Effects"** để xử lý
+5. Download audio đã xử lý
 
-### Voice Changer
+## 🔐 Bảo mật
 
-1. Truy cập `/voice-changer`
-2. Upload audio file cần chuyển đổi
-3. Chọn giọng nói đích
-4. Click "Convert"
-
-## 🔐 Security
-
-- API key encryption
-- File upload validation
-- Input sanitization
-- CORS configuration
+- **API Key Encryption**: ElevenLabs API key được mã hóa
+- **File Upload Validation**: Kiểm tra định dạng và kích thước file
+- **Input Sanitization**: Làm sạch dữ liệu đầu vào
+- **Session Security**: Cấu hình session an toàn
+- **Password Hashing**: Mật khẩu được mã hóa với bcrypt
 
 ## 🚀 Deployment
 
@@ -194,58 +199,112 @@ speak/
 python run.py
 ```
 
-### Production
+### Production với Gunicorn
 
 ```bash
-# Sử dụng Gunicorn
-gunicorn -w 4 -b 0.0.0.0:5000 run:app
+# Cài đặt Gunicorn
+pip install gunicorn
 
-# Với Docker
-docker build -t speak-app .
-docker run -p 5000:5000 speak-app
+# Chạy với Gunicorn
+gunicorn -w 4 -b 0.0.0.0:5000 run:app
 ```
 
-## 📊 API Endpoints
+### Production với Docker
+
+```dockerfile
+FROM python:3.9-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+EXPOSE 5000
+
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "run:app"]
+```
+
+## 🐛 Troubleshooting
+
+### Lỗi thường gặp
+
+1. **"Module not found"**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **"Database error"**
+
+   ```bash
+   python init_db.py
+   ```
+
+3. **"ElevenLabs API error"**
+
+   - Kiểm tra API key trong file `.env`
+   - Đảm bảo có credit trong ElevenLabs account
+
+4. **"Port already in use"**
+   ```bash
+   # Thay đổi port trong run.py
+   app.run(debug=True, host="0.0.0.0", port=5001)
+   ```
+
+### Logs
+
+Kiểm tra logs để debug:
+
+```bash
+# Development
+python run.py
+
+# Production
+gunicorn -w 4 -b 0.0.0.0:5000 run:app --log-level debug
+```
+
+## 📝 API Endpoints
+
+### Authentication
+
+- `POST /auth/register` - Đăng ký
+- `POST /auth/login` - Đăng nhập
+- `GET /auth/logout` - Đăng xuất
 
 ### Text-to-Speech
 
-- `POST /tts/generate` - Tạo audio từ văn bản
+- `GET /tts` - Giao diện TTS
+- `POST /tts/generate` - Tạo audio từ text
+- `GET /tts/voices` - Lấy danh sách voices
+- `GET /tts/models` - Lấy danh sách models
 - `POST /tts/stream` - Stream audio
-- `GET /tts/voices` - Lấy danh sách giọng nói
+- `GET /tts/download/<id>` - Download audio file
+- `POST /tts/delete/<id>` - Xóa audio file
 
-### Voice Cloning
+### Audio Effects
 
-- `POST /voice-cloning/create` - Tạo voice mới
-- `GET /voice-cloning/voices` - Lấy voice của user
-- `DELETE /voice-cloning/delete/<voice_id>` - Xóa voice
+- `GET /audio-effects` - Giao diện audio effects
+- `POST /audio-effects/apply` - Áp dụng audio effects
+- `POST /audio-effects/preview` - Preview audio effects
+- `GET /audio-effects/download/<id>` - Download audio file
+- `GET /audio-effects/library` - Thư viện hiệu ứng
 
-### Voice Changer
-
-- `POST /voice-changer/convert` - Chuyển đổi giọng nói
-- `POST /voice-changer/preview` - Preview conversion
-
-## 🤝 Contributing
+## 🤝 Đóng góp
 
 1. Fork repository
-2. Tạo feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
+2. Tạo feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Tạo Pull Request
 
-## 📝 License
+## 📄 License
 
-Dự án này được phát hành dưới MIT License. Xem file `LICENSE` để biết thêm chi tiết.
+Dự án này được phân phối dưới MIT License. Xem file `LICENSE` để biết thêm chi tiết.
 
-## 🆘 Support
+## 📞 Hỗ trợ
 
 Nếu gặp vấn đề, vui lòng:
 
-1. Kiểm tra [Issues](https://github.com/your-repo/issues)
-2. Tạo issue mới với mô tả chi tiết
-3. Liên hệ qua email: support@example.com
-
-## 🙏 Acknowledgments
-
-- [ElevenLabs](https://elevenlabs.io/) - Cung cấp API Text-to-Speech
-- [Flask](https://flask.palletsprojects.com/) - Web framework
-- [Tailwind CSS](https://tailwindcss.com/) - CSS framework
+1. Kiểm tra phần Troubleshooting
+2. Tạo issue trên GitHub
+3. Liên hệ qua email
